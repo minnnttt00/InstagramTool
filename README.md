@@ -3,7 +3,7 @@
 
 ## Instalación
 ```bash
-git clone https://github.com/TUUSUARIO/InstagramTool.git
+git clone https://github.com/minnnttt00/InstagramTool.git
 cd InstagramTool
 pip install -r requirements.txt
 python instagramtool.py
