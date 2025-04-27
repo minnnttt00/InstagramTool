@@ -24,7 +24,7 @@ if password != CONTRASENA_CORRECTA:
     time.sleep(1)
     sys.exit()
 
-print(f"{NARANJA}✅ Contraseña correcta. Bienvenido, adriiwiis 🔥{RESET}\n")
+print(f"{NARANJA}✅ Contraseña correcta. Bienvenid@ 🔥{RESET}\n")
 
 # Banner con los colores personalizados
 print(f"{ROSA}  _______  ____    ____   _        _____  _____ ")
@@ -62,21 +62,22 @@ except Exception as e:
     print(f"{ROSA}Error al iniciar sesión: {e}{RESET}")
     sys.exit()
 
-# Solución para evitar el error 'NoneType' object has no attribute 'get' en los hilos de mensajes
+# Solución para evitar el error 'NoneType' object has no attribute 'get' en los mensajes directos
 try:
+    # Aquí obtenemos los mensajes directos
     threads = cl.direct_threads()
-    if threads is None:
-        print(f"{ROSA}No se encontraron hilos de mensajes.{RESET}")
+    if not threads:
+        print(f"{ROSA}No se encontraron hilos de mensajes directos.{RESET}")
         sys.exit()
 except Exception as e:
-    print(f"{ROSA}Error al obtener los hilos de mensajes: {e}{RESET}")
+    print(f"{ROSA}Error al obtener los hilos de mensajes directos: {e}{RESET}")
     sys.exit()
 
 ultimas_5_personas = []
 
 # Evitar errores si no hay mensajes o hilos
 if threads:
-    for thread in threads[:5]:
+    for thread in threads[:5]:  # Limita a los 5 primeros hilos de conversación
         if len(thread.users) == 1:
             usuario = thread.users[0].username
         else:
@@ -132,4 +133,4 @@ if threads:
 else:
     print(f"{ROSA}No se encontraron hilos de mensajes para mostrar.{RESET}")
 
-input(f"\n{MORADO}Presiona Enter para salir...{RESET}") 
+input(f"\n{MORADO}Presiona Enter para salir...{RESET}")
