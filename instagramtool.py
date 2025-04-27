@@ -33,7 +33,7 @@ print(f"{ROSA}    | |  | |  | || |  | || |        | | | |  __ ")
 print(f"{NARANJA}    | |  | |  | || |  | || |        | | | | |_ |")
 print(f"{ROSA}    | |  | |__| || |__| || |____   _| |_| |__| |")
 print(f"{NARANJA}    |_|   \____/  \____/ |______| |_____|\_____|")
-print(f"{MORADO}                 IG TOOL{RESET}")
+print(f"{MORADO}                 :) {RESET}")
 print(f"{MORADO}              Created by Mint{RESET}\n")
 
 # Continuamos con el programa
@@ -64,11 +64,14 @@ except Exception as e:
 
 # Solución para evitar el error 'NoneType' object has no attribute 'get' en los mensajes directos
 try:
-    # Aquí obtenemos los mensajes directos
+    # Intentamos obtener los mensajes directos
     threads = cl.direct_threads()
-    if not threads:
-        print(f"{ROSA}No se encontraron hilos de mensajes directos.{RESET}")
+    
+    # Verificamos si 'threads' está vacío o es None
+    if not threads or threads is None:
+        print(f"{ROSA}No se encontraron hilos de mensajes directos. Asegúrate de estar conectado y de que tienes mensajes.{RESET}")
         sys.exit()
+
 except Exception as e:
     print(f"{ROSA}Error al obtener los hilos de mensajes directos: {e}{RESET}")
     sys.exit()
