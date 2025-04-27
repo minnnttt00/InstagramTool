@@ -11,6 +11,18 @@ GREEN = "\033[32m"
 YELLOW = "\033[33m"
 RESET = "\033[0m"
 
+# 🎯 BANNER
+def mostrar_banner():
+    print(f"""
+{GREEN}████████╗ ██████╗  ██████╗ ██╗     ███████╗██╗███╗   ███╗ ██████╗ 
+╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔════╝██║████╗ ████║██╔═══██╗
+   ██║   ██║   ██║██║   ██║██║     █████╗  ██║██╔████╔██║██║   ██║
+   ██║   ██║   ██║██║   ██║██║     ██╔══╝  ██║██║╚██╔╝██║██║   ██║
+   ██║   ╚██████╔╝╚██████╔╝███████╗██║     ██║██║ ╚═╝ ██║╚██████╔╝
+   ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚═╝     ╚═╝╚═╝     ╚═╝ ╚═════╝ 
+{YELLOW}                  Created by Mint{RESET}
+    """)
+
 # 🚀 Contraseña que quieres
 CONTRASENA_CORRECTA = "MintToolInstagram"
 
@@ -22,7 +34,10 @@ if password != CONTRASENA_CORRECTA:
     time.sleep(1)
     sys.exit()
 
-print(f"{GREEN}✅ Contraseña correcta. Bienvenido, adriiwiis 🔥{RESET}\n")
+print(f"{GREEN}✅ Contraseña correcta. Bienvenid@{RESET}\n")
+
+# Mostramos banner
+mostrar_banner()
 
 # Continuamos con el programa
 logging.getLogger("instagrapi").setLevel(logging.CRITICAL)
@@ -37,23 +52,21 @@ Client.public_request = silent_public_request
 
 cl = Client()
 
-print(f"{YELLOW}Bienvenido a {GREEN}INSTAGRAMTOOL{YELLOW} by {GREEN}Mint{RESET}")
+# Opciones
+print(f"\n{YELLOW}¿Qué quieres hacer?{RESET}")
+print(f"{GREEN}1.{RESET} Iniciar sesión con usuario y contraseña (sacar SESSIONID)")
+print(f"{GREEN}2.{RESET} Usar SESSIONID directamente")
 
-# --- FLUJO NUEVO: Eliges método de login ---
-print(f"\n{YELLOW}¿Cómo quieres iniciar sesión?{RESET}")
-print(f"{GREEN}1{RESET}. Usuario y Contraseña (para sacar Session ID)")
-print(f"{GREEN}2{RESET}. Usar Session ID directamente")
-
-opcion = input(f"\n{YELLOW}Elige una opción (1/2): {RESET}").strip()
+opcion = input(f"{YELLOW}Elige una opción (1 o 2): {RESET}").strip()
 
 if opcion == "1":
-    # Login con usuario y contraseña
+    # Pedimos sesión manualmente
     try:
         print(f"\n{YELLOW}Introduce tus datos de Instagram:{RESET}")
         username = input(f"{YELLOW}Usuario: {RESET}").strip()
-        password_instagram = input(f"{YELLOW}Contraseña: {RESET}").strip()
+        password = input(f"{YELLOW}Contraseña: {RESET}").strip()
 
-        cl.login(username, password_instagram)
+        cl.login(username, password)
         session_id = cl.sessionid
         print(f"\n{GREEN}Inicio de sesión exitoso!{RESET}")
         print(f"{YELLOW}Tu SESSION ID es: {GREEN}{session_id}{RESET}\n")
@@ -67,26 +80,21 @@ if opcion == "1":
         sys.exit()
 
 elif opcion == "2":
-    # Login con Session ID
+    # Pedimos SESSION ID manual
     try:
-        session_id = input(f"\n{YELLOW}Introduce tu Session ID: {RESET}").strip()
+        session_id = input(f"\n{YELLOW}Introduce tu SESSION ID: {RESET}").strip()
         cl.sessionid = session_id
-
-        user_id = cl.user_id_from_session_id(session_id)
-        if not user_id:
-            raise Exception("Session ID inválido o caducado.")
-
-        print(f"\n{GREEN}Inicio de sesión exitoso usando Session ID!{RESET}")
-
+        cl.get_timeline_feed()
+        print(f"{GREEN}✅ Session iniciada correctamente usando SESSION ID{RESET}\n")
     except Exception as e:
-        print(f"{RED}Error al iniciar sesión con Session ID: {e}{RESET}")
+        print(f"{RED}Error al iniciar sesión con SESSION ID: {e}{RESET}")
         sys.exit()
 
 else:
-    print(f"{RED}❌ Opción inválida.{RESET}")
+    print(f"{RED}Opción inválida. Cerrando...{RESET}")
     sys.exit()
 
-# --- YA LOGUEADO, SIGUE EL RESTO DEL PROGRAMA ---
+# Cargamos los hilos
 try:
     threads = cl.direct_threads()
 except Exception as e:
