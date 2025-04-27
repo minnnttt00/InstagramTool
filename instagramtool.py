@@ -5,39 +5,34 @@ from instagrapi import Client
 import os
 from datetime import datetime
 
-# ⚡ COLORES TERMINAL
-RED = "\033[31m"
-GREEN = "\033[32m"
-YELLOW = "\033[33m"
+# ⚡ COLORES TERMINAL de Instagram
+INSTAGRAM_PINK = "\033[38;5;204m"
+INSTAGRAM_ORANGE = "\033[38;5;214m"
+INSTAGRAM_PURPLE = "\033[38;5;99m"
 RESET = "\033[0m"
-
-# 🎯 BANNER
-def mostrar_banner():
-    print(f"""
-{GREEN}████████╗ ██████╗  ██████╗ ██╗     ███████╗██╗███╗   ███╗ ██████╗ 
-╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔════╝██║████╗ ████║██╔═══██╗
-   ██║   ██║   ██║██║   ██║██║     █████╗  ██║██╔████╔██║██║   ██║
-   ██║   ██║   ██║██║   ██║██║     ██╔══╝  ██║██║╚██╔╝██║██║   ██║
-   ██║   ╚██████╔╝╚██████╔╝███████╗██║     ██║██║ ╚═╝ ██║╚██████╔╝
-   ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚═╝     ╚═╝╚═╝     ╚═╝ ╚═════╝ 
-{YELLOW}                  Created by Mint{RESET}
-    """)
 
 # 🚀 Contraseña que quieres
 CONTRASENA_CORRECTA = "MintToolInstagram"
 
 # 🎯 Pide contraseña antes de arrancar
-password = input(f"{YELLOW}Introduce la contraseña para usar la herramienta: {RESET}").strip()
+password = input(f"{INSTAGRAM_PURPLE}Introduce la contraseña para usar la herramienta: {RESET}").strip()
 
 if password != CONTRASENA_CORRECTA:
-    print(f"{RED}❌ Contraseña incorrecta. Cerrando el programa...{RESET}")
+    print(f"{INSTAGRAM_PINK}❌ Contraseña incorrecta. Cerrando el programa...{RESET}")
     time.sleep(1)
     sys.exit()
 
-print(f"{GREEN}✅ Contraseña correcta. Bienvenid@{RESET}\n")
+print(f"{INSTAGRAM_ORANGE}✅ Contraseña correcta. Bienvenid@ 🔥{RESET}\n")
 
-# Mostramos banner
-mostrar_banner()
+# Banner con los colores de Instagram
+print(f"{INSTAGRAM_PINK}████████╗██████╗░░█████╗░██╗░░░██╗██╗░░░░░")
+print(f"{INSTAGRAM_ORANGE}╚══██╔══╝██╔══██╗██╔══██╗██║░░░██║██║░░░░░")
+print(f"{INSTAGRAM_PINK}░░░██║░░░██████╔╝██║░░██║██║░░░██║██║░░░░░")
+print(f"{INSTAGRAM_ORANGE}░░░██║░░░██╔══██╗██║░░██║██║░░░██║██║░░░░░")
+print(f"{INSTAGRAM_PINK}░░░██║░░░██║░░██║╚█████╔╝╚██████╔╝███████╗")
+print(f"{INSTAGRAM_ORANGE}░░░╚═╝░░░╚═╝░░╚═╝░╚════╝░░╚═════╝░╚══════╝")
+print(f"{INSTAGRAM_PURPLE}                  IG{RESET}")
+print(f"{INSTAGRAM_PURPLE}              Created by Mint{RESET}\n")
 
 # Continuamos con el programa
 logging.getLogger("instagrapi").setLevel(logging.CRITICAL)
@@ -52,53 +47,33 @@ Client.public_request = silent_public_request
 
 cl = Client()
 
-# Opciones
-print(f"\n{YELLOW}¿Qué quieres hacer?{RESET}")
-print(f"{GREEN}1.{RESET} Iniciar sesión con usuario y contraseña (sacar SESSIONID)")
-print(f"{GREEN}2.{RESET} Usar SESSIONID directamente")
+# Pedimos sesión manualmente
+try:
+    print(f"\n{INSTAGRAM_PURPLE}Introduce tus datos de Instagram:{RESET}")
+    username = input(f"{INSTAGRAM_PURPLE}Usuario: {RESET}").strip()
+    password = input(f"{INSTAGRAM_PURPLE}Contraseña: {RESET}").strip()
 
-opcion = input(f"{YELLOW}Elige una opción (1 o 2): {RESET}").strip()
+    cl.login(username, password)
+    session_id = cl.sessionid
+    print(f"\n{INSTAGRAM_ORANGE}Inicio de sesión exitoso!{RESET}")
+    print(f"{INSTAGRAM_PURPLE}Tu SESSION ID es: {INSTAGRAM_ORANGE}{session_id}{RESET}\n")
 
-if opcion == "1":
-    # Pedimos sesión manualmente
-    try:
-        print(f"\n{YELLOW}Introduce tus datos de Instagram:{RESET}")
-        username = input(f"{YELLOW}Usuario: {RESET}").strip()
-        password = input(f"{YELLOW}Contraseña: {RESET}").strip()
+    # Guardamos session_id automáticamente
+    with open("session.txt", "w") as f:
+        f.write(session_id)
 
-        cl.login(username, password)
-        session_id = cl.sessionid
-        print(f"\n{GREEN}Inicio de sesión exitoso!{RESET}")
-        print(f"{YELLOW}Tu SESSION ID es: {GREEN}{session_id}{RESET}\n")
-
-        # Guardamos session_id automáticamente
-        with open("session.txt", "w") as f:
-            f.write(session_id)
-
-    except Exception as e:
-        print(f"{RED}Error al iniciar sesión: {e}{RESET}")
-        sys.exit()
-
-elif opcion == "2":
-    # Pedimos SESSION ID manual
-    try:
-        session_id = input(f"\n{YELLOW}Introduce tu SESSION ID: {RESET}").strip()
-        cl.sessionid = session_id
-        cl.get_timeline_feed()
-        print(f"{GREEN}✅ Session iniciada correctamente usando SESSION ID{RESET}\n")
-    except Exception as e:
-        print(f"{RED}Error al iniciar sesión con SESSION ID: {e}{RESET}")
-        sys.exit()
-
-else:
-    print(f"{RED}Opción inválida. Cerrando...{RESET}")
+except Exception as e:
+    print(f"{INSTAGRAM_PINK}Error al iniciar sesión: {e}{RESET}")
     sys.exit()
 
-# Cargamos los hilos
+# Solución para evitar el error 'NoneType' object has no attribute 'get' en los hilos de mensajes
 try:
     threads = cl.direct_threads()
+    if threads is None:
+        print(f"{INSTAGRAM_PINK}No se encontraron hilos de mensajes.{RESET}")
+        sys.exit()
 except Exception as e:
-    print(f"{RED}Error al obtener los hilos de mensajes: {e}{RESET}")
+    print(f"{INSTAGRAM_PINK}Error al obtener los hilos de mensajes: {e}{RESET}")
     sys.exit()
 
 ultimas_5_personas = []
@@ -110,11 +85,11 @@ for thread in threads[:5]:
         usuario = ", ".join([user.username for user in thread.users])
     ultimas_5_personas.append(usuario)
 
-print(f"\n{GREEN}Últimas 5 personas con las que has hablado:{RESET}")
+print(f"\n{INSTAGRAM_ORANGE}Últimas 5 personas con las que has hablado:{RESET}")
 for idx, usuario in enumerate(ultimas_5_personas, start=1):
     print(f"{idx}. {usuario}")
 
-nombre_buscado = input(f"\n{YELLOW}Ingresa el nombre de usuario para ver los últimos mensajes: {RESET}").strip()
+nombre_buscado = input(f"\n{INSTAGRAM_PURPLE}Ingresa el nombre de usuario para ver los últimos mensajes: {RESET}").strip()
 
 def encontrar_thread(threads, nombre):
     for thread in threads:
@@ -131,7 +106,7 @@ thread_encontrado = encontrar_thread(threads, nombre_buscado)
 if thread_encontrado:
     messages = thread_encontrado.messages
     total_mensajes = len(messages)
-    print(f"\nÚltimos mensajes con {nombre_buscado} (Total de mensajes: {total_mensajes}):\n")
+    print(f"\n{INSTAGRAM_ORANGE}Últimos mensajes con {nombre_buscado} (Total de mensajes: {total_mensajes}):{RESET}")
     
     num_mensajes_a_mostrar = 10
     mensajes_a_mostrar = (
@@ -155,6 +130,6 @@ if thread_encontrado:
 
         print(f"[{timestamp}] {sender_username}: {text}")
 else:
-    print(f"\n{RED}No se encontró una conversación con '{nombre_buscado}'.{RESET}")
+    print(f"\n{INSTAGRAM_PINK}No se encontró una conversación con '{nombre_buscado}'.{RESET}")
 
-input(f"\n{YELLOW}Presiona Enter para salir...{RESET}")
+input(f"\n{INSTAGRAM_PURPLE}Presiona Enter para salir...{RESET}") 
