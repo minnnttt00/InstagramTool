@@ -1,1 +1,5 @@
-pip install instagrapi==2.0.0
+instagrapi==2.0.0
+requests==2.32.3
+Pillow>=11.2.1
+pydantic==1.10.9
+pycryptodomex==3.18.0 
