@@ -22,7 +22,7 @@ if password != CONTRASENA_CORRECTA:
     time.sleep(1)
     sys.exit()
 
-print(f"{GREEN}✅ Contraseña correcta. Bienvenid@ 🔥{RESET}\n")
+print(f"{GREEN}✅ Contraseña correcta. Bienvenido, adriiwiis 🔥{RESET}\n")
 
 # Continuamos con el programa
 logging.getLogger("instagrapi").setLevel(logging.CRITICAL)
@@ -39,20 +39,21 @@ cl = Client()
 
 print(f"{YELLOW}Bienvenido a {GREEN}INSTAGRAMTOOL{YELLOW} by {GREEN}Mint{RESET}")
 
-# Intentamos cargar el session_id desde el archivo
-if os.path.exists("session.txt"):
-    with open("session.txt", "r") as f:
-        session_id = f.read().strip()
-    cl.set_sessionid(session_id)
-    print(f"{GREEN}✅ Session ID cargado con éxito.{RESET}\n")
-else:
-    # Si no existe el archivo de sesión, pedimos los datos de login
+# --- FLUJO NUEVO: Eliges método de login ---
+print(f"\n{YELLOW}¿Cómo quieres iniciar sesión?{RESET}")
+print(f"{GREEN}1{RESET}. Usuario y Contraseña (para sacar Session ID)")
+print(f"{GREEN}2{RESET}. Usar Session ID directamente")
+
+opcion = input(f"\n{YELLOW}Elige una opción (1/2): {RESET}").strip()
+
+if opcion == "1":
+    # Login con usuario y contraseña
     try:
         print(f"\n{YELLOW}Introduce tus datos de Instagram:{RESET}")
         username = input(f"{YELLOW}Usuario: {RESET}").strip()
-        password = input(f"{YELLOW}Contraseña: {RESET}").strip()
+        password_instagram = input(f"{YELLOW}Contraseña: {RESET}").strip()
 
-        cl.login(username, password)
+        cl.login(username, password_instagram)
         session_id = cl.sessionid
         print(f"\n{GREEN}Inicio de sesión exitoso!{RESET}")
         print(f"{YELLOW}Tu SESSION ID es: {GREEN}{session_id}{RESET}\n")
@@ -65,21 +66,27 @@ else:
         print(f"{RED}Error al iniciar sesión: {e}{RESET}")
         sys.exit()
 
-# Después de iniciar sesión, damos la opción de ingresar el session_id manualmente
-while True:
-    ingresar_session_id = input(f"{YELLOW}¿Quieres ingresar un session_id manualmente? (s/n): {RESET}").strip().lower()
-    
-    if ingresar_session_id == 's':
-        session_id_manual = input(f"{YELLOW}Introduce tu SESSION ID: {RESET}").strip()
-        cl.set_sessionid(session_id_manual)
-        print(f"{GREEN}✅ Session ID actualizado. Ahora puedes usar la herramienta.{RESET}\n")
-        break
-    elif ingresar_session_id == 'n':
-        break
-    else:
-        print(f"{RED}❌ Opción no válida. Por favor, elige 's' o 'n'.{RESET}")
+elif opcion == "2":
+    # Login con Session ID
+    try:
+        session_id = input(f"\n{YELLOW}Introduce tu Session ID: {RESET}").strip()
+        cl.sessionid = session_id
 
-# Aquí puedes continuar con el resto de la funcionalidad de la herramienta.
+        user_id = cl.user_id_from_session_id(session_id)
+        if not user_id:
+            raise Exception("Session ID inválido o caducado.")
+
+        print(f"\n{GREEN}Inicio de sesión exitoso usando Session ID!{RESET}")
+
+    except Exception as e:
+        print(f"{RED}Error al iniciar sesión con Session ID: {e}{RESET}")
+        sys.exit()
+
+else:
+    print(f"{RED}❌ Opción inválida.{RESET}")
+    sys.exit()
+
+# --- YA LOGUEADO, SIGUE EL RESTO DEL PROGRAMA ---
 try:
     threads = cl.direct_threads()
 except Exception as e:
