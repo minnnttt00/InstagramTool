@@ -1,1 +1,1 @@
-instagrapi==2.1.3
+pip install instagrapi==2.0.0
