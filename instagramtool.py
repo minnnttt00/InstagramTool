@@ -2,7 +2,6 @@ import sys
 import time
 import logging
 from instagrapi import Client
-import os
 from datetime import datetime
 
 # ⚡ COLORES TERMINAL de Instagram
@@ -45,10 +44,8 @@ try:
     username = input(f"{INSTAGRAM_PURPLE}Usuario: {RESET}").strip()
     password = input(f"{INSTAGRAM_PURPLE}Contraseña: {RESET}").strip()
 
-    # Iniciamos sesión con usuario y contraseña sin session_id
     cl.login(username, password)
-    print(f"\n{INSTAGRAM_ORANGE}Inicio de sesión exitoso!{RESET}\n")
-
+    print(f"\n{INSTAGRAM_ORANGE}Inicio de sesión exitoso!{RESET}")
 except Exception as e:
     print(f"{INSTAGRAM_PINK}Error al iniciar sesión: {e}{RESET}")
     sys.exit()
@@ -56,14 +53,15 @@ except Exception as e:
 # Intentamos obtener los hilos de mensajes directos
 try:
     threads = cl.direct_threads()
-    if threads is None:
-        print(f"{INSTAGRAM_PINK}No se encontraron hilos de mensajes.{RESET}")
+    if not threads:
+        print(f"{INSTAGRAM_PINK}No se encontraron hilos de mensajes directos.{RESET}")
         sys.exit()
+    
+    print(f"{INSTAGRAM_ORANGE}Hilos de mensajes directos obtenidos correctamente!{RESET}")
 except Exception as e:
     print(f"{INSTAGRAM_PINK}Error al obtener los hilos de mensajes directos: {e}{RESET}")
     sys.exit()
 
-# Mostramos las últimas 5 personas con las que se ha hablado
 ultimas_5_personas = []
 
 for thread in threads[:5]:
